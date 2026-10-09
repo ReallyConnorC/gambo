@@ -1,5 +1,6 @@
 const { SUPABASE_URL, SUPABASE_ANON_KEY } = window.GAMBO_CONFIG;
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// No-op lock: supabase-js's cross-tab lock can deadlock and freeze every request
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { lock: (_name, _timeout, fn) => fn() } });
 const app = document.getElementById("app");
 const nav = document.getElementById("nav");
 let user = null, profile = null;
@@ -16,7 +17,8 @@ async function loadProfile() {
 async function setBalance(b) {
   profile.balance = b;
   renderNav();
-  await sb.from("profiles").update({ balance: b }).eq("id", user.id);
+  // Save in the background so a slow network never freezes a game
+  sb.from("profiles").update({ balance: b }).eq("id", user.id).then(({ error }) => error && console.warn("Balance save failed", error));
 }
 
 // What the big games in games.js use to touch the balance
@@ -173,11 +175,13 @@ function bindSimple(g) {
   };
 }
 
-sb.auth.onAuthStateChange(async (_e, session) => {
+// Supabase calls must not be awaited inside this callback, so defer the work
+sb.auth.onAuthStateChange((_e, session) => setTimeout(() => onSession(session)));
+async function onSession(session) {
   const wasIn = !!user;
   user = session?.user ?? null;
   await loadProfile();
   if (user && ["#/login", "#/signup"].includes(location.hash)) location.hash = "#/";
   else if (wasIn !== !!user || !app.innerHTML) route();
-});
+}
 window.addEventListener("hashchange", route);
