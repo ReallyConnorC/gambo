@@ -1,11 +1,21 @@
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gambo</title><link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0730">
+<title>Gambo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head><body>
-<header><a href="#/" class="logo">🎲 Gambo</a><nav id="nav"></nav></header>
-<div class="banner">Play money only — Gambo coins have no real value and can't be bought or cashed out.</div>
+<header><a href="#/" class="logo">GAMBO</a><div id="nav"></div></header>
 <main id="app"></main>
+<nav class="tabbar" id="tabbar">
+  <a href="#/" data-t="/">🏠<span>Lobby</span></a>
+  <a href="#/megaslots" data-t="/megaslots">🎰<span>Slots</span></a>
+  <a href="#/blackjack" data-t="/blackjack">🃏<span>Tables</span></a>
+  <a href="#/leaderboard" data-t="/leaderboard">🏆<span>Top</span></a>
+</nav>
+<footer>Play money only — Gambo coins have no real value and can't be bought or cashed out.</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="config.js"></script><script src="app.js"></script>
+<script src="config.js"></script><script src="slotmath.js"></script><script src="games.js"></script><script src="app.js"></script>
 </body></html>
